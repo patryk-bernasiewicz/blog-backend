@@ -1,17 +1,19 @@
 import { Knex } from 'knex';
 
+const TABLE_NAME = 'users';
+
 export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTable('users', (table) => {
+  return knex.schema.createTable(TABLE_NAME, (table) => {
     table.increments('id');
-    table.string('username', 255).notNullable();
-    table.string('display_name', 255).notNullable();
-    table.string('email', 255).notNullable();
+    table.string('username', 255).notNullable().unique();
+    table.string('displayName', 255).notNullable();
+    table.string('email', 255).notNullable().unique();
     table.string('password', 255).notNullable();
-    table.timestamp('created_at').defaultTo(knex.fn.now());
-    table.timestamp('updated_at').defaultTo(knex.fn.now());
+    table.timestamp('createdAt').defaultTo(knex.fn.now());
+    table.timestamp('updatedAt').defaultTo(knex.fn.now());
   });
 }
 
 export async function down(knex: Knex): Promise<void> {
-  knex.schema.dropTable('users');
+  return knex.schema.dropTable(TABLE_NAME);
 }
