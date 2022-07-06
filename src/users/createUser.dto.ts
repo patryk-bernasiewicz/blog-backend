@@ -1,5 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { Match } from 'src/utils/decorators/match.decorator';
+
+import { Match } from '@utils/decorators/match.decorator';
 
 export class CreateUserDTO {
   @IsNotEmpty()

@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectKnex, Knex } from 'nestjs-knex';
+import * as bcrypt from 'bcrypt';
+
+import messages from '@utils/constants/messages';
+
 import { CreateUserDTO } from './createUser.dto';
 import { UserEntity } from './user.entity';
-import * as bcrypt from 'bcrypt';
-import messages from 'src/utils/constants/messages';
 
 const TABLE_NAME = 'users';
 
