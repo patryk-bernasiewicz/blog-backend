@@ -1,13 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectKnex, Knex } from 'nestjs-knex';
 import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 
 import messages from '@utils/constants/messages';
 
 import { CreateUserDTO } from './createUser.dto';
 import { UserEntity } from './user.entity';
+import * as dayjs from 'dayjs';
 
 const TABLE_NAME = 'users';
+const TOKENS_TABLE_NAME = 'user_activation_tokens';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +23,6 @@ export class UsersService {
       displayName,
       email,
     });
-    const hashedPassword = await bcrypt.hash(password, 5);
 
     const [existing] = await this.knex(TABLE_NAME)
       .select<[UserEntity]>(['username', 'email'])
@@ -40,8 +42,8 @@ export class UsersService {
       }
     }
 
-    const [insertedUser] = await this.knex
-      .table(TABLE_NAME)
+    const hashedPassword = await bcrypt.hash(password, 5);
+    const [insertedUser] = await this.knex(TABLE_NAME)
       .insert({
         ...createdUser,
         password: hashedPassword,
@@ -67,5 +69,20 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  async createActivationToken(user: UserEntity): Promise<string> {
+    const token = randomBytes(12).toString('hex');
+
+    const [savedToken] = await this.knex
+      .table(TOKENS_TABLE_NAME)
+      .insert({
+        userId: user.id,
+        token,
+        validUntil: dayjs().add(24, 'hour').toDate(),
+      })
+      .returning<[string]>(['token']);
+
+    return savedToken;
   }
 }

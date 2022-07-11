@@ -7,6 +7,9 @@ export class UserEntity {
   email: string;
 
   @Exclude()
+  active?: boolean;
+
+  @Exclude()
   password: string;
 
   constructor(partial: Partial<UserEntity>) {

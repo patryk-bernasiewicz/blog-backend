@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   pg:
+    container_name: blog-backend-pg
     image: postgres:14.4-alpine
     restart: always
     environment:
@@ -12,6 +13,7 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
   pgadmin:
+    container_name: blog-backend-pgadmin
     image: dpage/pgadmin4
     restart: always
     environment:
@@ -19,6 +21,13 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
       - '5050:80'
+  devmailer:
+    container_name: blog-backend-devmailer
+    image: maildev/maildev
+    restart: always
+    ports:
+      - '1080:1080'
+      - '1025:1025'
 
 volumes:
   db:

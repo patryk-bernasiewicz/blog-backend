@@ -4,6 +4,7 @@ import { KnexModule } from 'nestjs-knex';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { MailingModule } from './mailing/mailing.module';
 
 const configKeys = {
   db: {
@@ -37,6 +38,7 @@ const configKeys = {
       inject: [ConfigService],
     }),
     UsersModule,
+    MailingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
