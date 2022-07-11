@@ -18,7 +18,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly mailerSerivce: MailingService,
+    private readonly mailingService: MailingService,
   ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -29,7 +29,7 @@ export class UsersController {
 
     if (createdUser) {
       const token = await this.usersService.createActivationToken(createdUser);
-      await this.mailerSerivce.sendUserActivationEmail(createdUser, token);
+      await this.mailingService.sendUserActivationEmail(createdUser, token);
     }
 
     return new UserEntity(createdUser);
